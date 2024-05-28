@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h2>Register</h2>
+            <form id="registerForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+                <span id="strengthMessage"></span><br>
+                <button type="submit">Register</button>
+            </form>
+            <p id="message"></p>
+            <a href="login.html">Already have an account? Login here</a>
+        </div>
+    </div>
+
+    <script>
+        function checkPasswordStrength(password) {
+            var strengthMessage = document.getElementById('strengthMessage');
+            var strength = 'weak';
+            var strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})');
+
+            if (strongRegex.test(password)) {
+                strength = 'strong';
+            } else if (password.length >= 6) {
+                strength = 'medium';
+            }
+
+            strengthMessage.textContent = 'Password strength: ' + strength;
+            strengthMessage.className = strength;
+        }
+
+        document.getElementById('password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            if (localStorage.getItem(username)) {
+                document.getElementById('message').textContent = 'Username already exists!';
+            } else {
+                if (password.length < 8) {
+                    document.getElementById('message').textContent = 'Password must be at least 8 characters long!';
+                } else {
+                    localStorage.setItem(username, password);
+                    document.getElementById('message').textContent = 'Registration successful! Please log in.';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
